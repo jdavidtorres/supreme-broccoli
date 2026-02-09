@@ -1,0 +1,9 @@
+{
+    "editor.formatOnSave": true,
+    "editor.fontSize": 17,
+    "files.autoSave": "onFocusChange",
+    "chat.useNestedAgentsMdFiles": true,
+    "chat.agent.maxRequests": 225,
+    "chatgpt.runCodexInWindowsSubsystemForLinux": true,
+    "inlineChat.defaultModel": "Auto (copilot)"
+}
