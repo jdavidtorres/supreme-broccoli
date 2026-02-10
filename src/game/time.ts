@@ -18,6 +18,40 @@ function daysInMonth(year: number, month: number): number {
   }
 }
 
+export function advanceHours(clock: GameClock, hours: number): GameClock {
+  let newHour = clock.hour + hours;
+  let newDay = clock.day;
+  let newMonth = clock.month;
+  let newYear = clock.year;
+
+  // If hour exceeds 22 (end of workday), advance to next day(s) at 9am plus remaining hours
+  // Work day is 9-22 (13 hours), so we advance days for every 13-hour period past 22
+  while (newHour >= 22) {
+    const hoursOverflow = newHour - 22; // Hours past end of day
+    newHour = 9 + hoursOverflow; // Start next day at 9am plus overflow
+    newDay++;
+    
+    const maxDay = daysInMonth(newYear, newMonth);
+    if (newDay > maxDay) {
+      newDay = 1;
+      newMonth++;
+      if (newMonth > 12) {
+        newMonth = 1;
+        newYear++;
+      }
+    }
+  }
+
+  return {
+    ...clock,
+    year: newYear,
+    month: newMonth,
+    day: newDay,
+    hour: newHour,
+    speed: "PAUSED"
+  };
+}
+
 export function advanceDay(clock: GameClock): GameClock {
   const maxDay = daysInMonth(clock.year, clock.month);
   if (clock.day < maxDay) {
