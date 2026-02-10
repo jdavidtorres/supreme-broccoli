@@ -3,6 +3,7 @@ import type { DayAction, StatEffect } from "../shared/types";
 export interface ActionResolution {
   effects: StatEffect[];
   narrative: string;
+  hoursSpent: number;
 }
 
 export function resolveAction(action: DayAction): ActionResolution {
@@ -10,6 +11,7 @@ export function resolveAction(action: DayAction): ActionResolution {
     case "WORK":
       return {
         narrative: "Te concentraste en tareas de oficina y desplegaste un fix útil.",
+        hoursSpent: 4,
         effects: [
           { key: "cash", delta: 120 },
           { key: "energy", delta: -15 },
@@ -22,6 +24,7 @@ export function resolveAction(action: DayAction): ActionResolution {
     case "CONTRACT":
       return {
         narrative: "Tomaste un contrato extra fuera de horario y te esforzaste al máximo para entregar.",
+        hoursSpent: 5,
         effects: [
           { key: "cash", delta: 180 },
           { key: "energy", delta: -20 },
@@ -34,6 +37,7 @@ export function resolveAction(action: DayAction): ActionResolution {
     case "STUDY":
       return {
         narrative: "Estudiaste con intención e invertiste en tu futuro.",
+        hoursSpent: 3,
         effects: [
           { key: "cash", delta: -35 },
           { key: "energy", delta: -8 },
@@ -47,6 +51,7 @@ export function resolveAction(action: DayAction): ActionResolution {
     case "REST":
       return {
         narrative: "Bajaste el ritmo, dormiste mejor y restableciste tu nivel base.",
+        hoursSpent: 2,
         effects: [
           { key: "energy", delta: 24 },
           { key: "stress", delta: -18 },
@@ -56,6 +61,7 @@ export function resolveAction(action: DayAction): ActionResolution {
     case "LEISURE":
       return {
         narrative: "Te desconectaste un rato y la pasaste bien.",
+        hoursSpent: 3,
         effects: [
           { key: "cash", delta: -45 },
           { key: "energy", delta: 8 },
@@ -67,6 +73,7 @@ export function resolveAction(action: DayAction): ActionResolution {
     default:
       return {
         narrative: "Pasaste el día en un flujo neutral.",
+        hoursSpent: 1,
         effects: []
       };
   }

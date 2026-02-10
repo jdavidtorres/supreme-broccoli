@@ -9,7 +9,7 @@ import type {
 } from "../shared/types";
 
 const SLOT_ID = 1;
-const MAX_MVP_DAY = 7;
+const END_YEAR = 2025;
 
 type LoadRunResponse = {
   state: GameState;
@@ -115,7 +115,7 @@ export function App() {
     void bootstrap();
   }, [bootAttempt]);
 
-  const isFinished = Boolean(state && state.day > MAX_MVP_DAY);
+  const isFinished = Boolean(state && state.clock.year >= END_YEAR);
 
   const sceneClass = useMemo(() => {
     if (!state) {
@@ -277,9 +277,9 @@ export function App() {
       <aside className="right-panel">
         <div className="clock">
           {formatDate(summary.clock)}
-          <span className="clock-day">Día {summary.day > MAX_MVP_DAY ? MAX_MVP_DAY : summary.day} / 7</span>
+          <span className="clock-day">Año {summary.clock.year} - Día {summary.day}</span>
         </div>
-        {isFinished && <p className="done">Semana MVP completada. Inicia una nueva partida para volver a jugar.</p>}
+        {isFinished && <p className="done">Juego completado. Has llegado al año 2025. Inicia una nueva partida para volver a jugar.</p>}
         <div className="stats-grid">
           <StatCard label="Modo" value={summary.mode === "EMPLOYEE" ? "Empleado" : "Freelancer"} />
           <StatCard label="Dinero" value={formatMoney(summary.cash)} />

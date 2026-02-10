@@ -13,7 +13,7 @@ import { MVP_EVENTS } from "./content";
 import { applyEffects } from "./effects";
 import { selectEvent } from "./events";
 import { computeProductivity } from "./metrics";
-import { advanceDay } from "./time";
+import { advanceDay, advanceHours } from "./time";
 
 function endOfDay(state: GameState): { state: GameState; effects: StatEffect[]; narrative: string[] } {
   const effects: StatEffect[] = [
@@ -26,13 +26,13 @@ function endOfDay(state: GameState): { state: GameState; effects: StatEffect[]; 
   const withDayAdvance: GameState = {
     ...next,
     day: state.day + 1,
-    clock: advanceDay(state.clock),
+    // Don't call advanceDay here - clock is already advanced by advanceHours
     pendingEventId: null,
     productivity: computeProductivity(next)
   };
   const narrative = [`Gastos de fin de día: -${state.burnRate} dinero.`];
-  if (withDayAdvance.day > GAME_CONFIG.maxDay) {
-    narrative.push("Semana completada. Llegaste al final de la partida MVP.");
+  if (withDayAdvance.clock.year >= 2025) {
+    narrative.push("Has llegado al año 2025. ¡Fin del juego!");
   }
   return { state: withDayAdvance, effects, narrative };
 }
@@ -79,7 +79,7 @@ export function applyAction(
     log: [...context.state.log]
   };
 
-  if (state.day > GAME_CONFIG.maxDay) {
+  if (state.clock.year >= 2025) {
     return {
       state,
       eventHistory: history,
@@ -108,10 +108,21 @@ export function applyAction(
     narrative.push(`Evento resuelto: ${event.title} -> ${option.label}`);
     history[event.id] = context.state.day;
 
-    const dayClosure = endOfDay(state);
-    state = dayClosure.state;
-    statChanges.push(...dayClosure.effects);
-    narrative.push(...dayClosure.narrative);
+    // Clear pending event
+    state.pendingEventId = null;
+
+    // Advance time by 1 hour for event resolution
+    const newClock = advanceHours(state.clock, 1);
+    const dayChanged = newClock.day !== state.clock.day;
+    state.clock = newClock;
+
+    // Only apply end of day effects if day actually changed
+    if (dayChanged) {
+      const dayClosure = endOfDay(state);
+      state = dayClosure.state;
+      statChanges.push(...dayClosure.effects);
+      narrative.push(...dayClosure.narrative);
+    }
 
     return {
       state,
@@ -122,7 +133,7 @@ export function applyAction(
         statChanges,
         triggeredEvent: null,
         unlocks: [],
-        dayAdvanced: true
+        dayAdvanced: dayChanged
       }
     };
   }
@@ -135,6 +146,11 @@ export function applyAction(
   state = applyEffects(state, actionResult.effects);
   statChanges.push(...actionResult.effects);
   narrative.push(actionResult.narrative);
+
+  // Advance time by hours spent on action
+  const newClock = advanceHours(state.clock, actionResult.hoursSpent);
+  const dayChanged = newClock.day !== state.clock.day;
+  state.clock = newClock;
 
   const event = selectEvent(state, history, events);
   if (event) {
@@ -154,10 +170,13 @@ export function applyAction(
     };
   }
 
-  const dayClosure = endOfDay(state);
-  state = dayClosure.state;
-  statChanges.push(...dayClosure.effects);
-  narrative.push(...dayClosure.narrative);
+  // Only apply end of day effects if day actually changed
+  if (dayChanged) {
+    const dayClosure = endOfDay(state);
+    state = dayClosure.state;
+    statChanges.push(...dayClosure.effects);
+    narrative.push(...dayClosure.narrative);
+  }
 
   return {
     state,
@@ -168,7 +187,7 @@ export function applyAction(
       statChanges,
       triggeredEvent: null,
       unlocks: [],
-      dayAdvanced: true
+      dayAdvanced: dayChanged
     }
   };
 }
