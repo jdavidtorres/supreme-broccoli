@@ -33,15 +33,15 @@ type ApplyActionResponse = {
 };
 
 const ACTIONS: Array<{ key: DayAction; label: string }> = [
-  { key: "WORK", label: "Work" },
-  { key: "CONTRACT", label: "Contract" },
-  { key: "STUDY", label: "Study" },
-  { key: "REST", label: "Rest" },
-  { key: "LEISURE", label: "Leisure" }
+  { key: "WORK", label: "Trabajar" },
+  { key: "CONTRACT", label: "Contrato" },
+  { key: "STUDY", label: "Estudiar" },
+  { key: "REST", label: "Descansar" },
+  { key: "LEISURE", label: "Ocio" }
 ];
 
 function formatMoney(value: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-ES", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0
@@ -95,7 +95,7 @@ export function App() {
         if (loaded) {
           setState(loaded.state);
           setSummary(loaded.summary);
-          setNarrative([`Loaded existing run. Day ${loaded.state.day}.`]);
+          setNarrative([`Partida cargada. Día ${loaded.state.day}.`]);
           return;
         }
         const created = (await withTimeout(
@@ -105,7 +105,7 @@ export function App() {
         )) as StartRunResponse;
         setState(created.state);
         setSummary(created.summary);
-        setNarrative(["New run started. Build your week."]);
+        setNarrative(["Nueva partida iniciada. Construye tu semana."]);
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -138,7 +138,7 @@ export function App() {
       setState(created.state);
       setSummary(created.summary);
       setPendingEvent(null);
-      setNarrative(["Run reset. Day 1 begins."]);
+      setNarrative(["Partida reiniciada. Comienza el día 1."]);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -215,10 +215,10 @@ export function App() {
   if (!state || !summary) {
     return (
       <div className="loading">
-        <p>Loading game...</p>
+        <p>Cargando juego...</p>
         {error ? <p className="error">{error}</p> : null}
         <button onClick={() => setBootAttempt((value) => value + 1)} disabled={busy}>
-          Retry
+          Reintentar
         </button>
       </div>
     );
@@ -230,7 +230,7 @@ export function App() {
         <header className="title-row">
           <h1>Dev Life Tycoon</h1>
           <button onClick={() => void handleStartNewRun()} disabled={busy}>
-            New Run
+            Nueva Partida
           </button>
         </header>
         <div className={sceneClass}>
@@ -245,7 +245,7 @@ export function App() {
           <div className="monitor" />
         </div>
         <div className="feed">
-          <h2>Story Feed</h2>
+          <h2>Historial</h2>
           {pendingEvent ? (
             <div className="event-box">
               <h3>{pendingEvent.title}</h3>
@@ -264,7 +264,7 @@ export function App() {
               </div>
             </div>
           ) : (
-            <p className="event-placeholder">Choose your main activity for the day.</p>
+            <p className="event-placeholder">Elige tu actividad principal del día.</p>
           )}
           <ul>
             {narrative.map((line, index) => (
@@ -277,21 +277,21 @@ export function App() {
       <aside className="right-panel">
         <div className="clock">
           {formatDate(summary.clock)}
-          <span className="clock-day">Day {summary.day > MAX_MVP_DAY ? MAX_MVP_DAY : summary.day} / 7</span>
+          <span className="clock-day">Día {summary.day > MAX_MVP_DAY ? MAX_MVP_DAY : summary.day} / 7</span>
         </div>
-        {isFinished && <p className="done">MVP week complete. Start a new run to replay.</p>}
+        {isFinished && <p className="done">Semana MVP completada. Inicia una nueva partida para volver a jugar.</p>}
         <div className="stats-grid">
-          <StatCard label="Mode" value={summary.mode} />
-          <StatCard label="Cash" value={formatMoney(summary.cash)} />
-          <StatCard label="Energy" value={`${summary.energy}`} />
-          <StatCard label="Stress" value={`${summary.stress}`} />
-          <StatCard label="Reputation" value={`${summary.reputation}`} />
-          <StatCard label="Productivity" value={`${summary.productivity}`} />
-          <StatCard label="Mood" value={`${summary.mood}`} />
-          <StatCard label="Burn Rate" value={formatMoney(state.burnRate)} />
+          <StatCard label="Modo" value={summary.mode === "EMPLOYEE" ? "Empleado" : "Freelancer"} />
+          <StatCard label="Dinero" value={formatMoney(summary.cash)} />
+          <StatCard label="Energía" value={`${summary.energy}`} />
+          <StatCard label="Estrés" value={`${summary.stress}`} />
+          <StatCard label="Reputación" value={`${summary.reputation}`} />
+          <StatCard label="Productividad" value={`${summary.productivity}`} />
+          <StatCard label="Ánimo" value={`${summary.mood}`} />
+          <StatCard label="Gasto Diario" value={formatMoney(state.burnRate)} />
         </div>
         <div className="goals">
-          <h3>Goals</h3>
+          <h3>Objetivos</h3>
           <ul>
             {summary.goals.map((goal) => (
               <li key={goal}>{goal}</li>

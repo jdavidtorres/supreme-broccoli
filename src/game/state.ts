@@ -21,7 +21,7 @@ export function createInitialState(): GameState {
     productivity: 50,
     mood: 60,
     inventory: ["old-laptop"],
-    activeGoals: ["Build emergency fund: 1000 cash"],
+    activeGoals: ["Fondo de emergencia: 1000 de dinero"],
     skills: {
       backend: 1,
       frontend: 1,

@@ -9,7 +9,7 @@ export function resolveAction(action: DayAction): ActionResolution {
   switch (action) {
     case "WORK":
       return {
-        narrative: "You focused on office tasks and shipped a useful fix.",
+        narrative: "Te concentraste en tareas de oficina y desplegaste un fix útil.",
         effects: [
           { key: "cash", delta: 120 },
           { key: "energy", delta: -15 },
@@ -21,7 +21,7 @@ export function resolveAction(action: DayAction): ActionResolution {
       };
     case "CONTRACT":
       return {
-        narrative: "You took a side contract after hours and pushed hard to deliver.",
+        narrative: "Tomaste un contrato extra fuera de horario y te esforzaste al máximo para entregar.",
         effects: [
           { key: "cash", delta: 180 },
           { key: "energy", delta: -20 },
@@ -33,7 +33,7 @@ export function resolveAction(action: DayAction): ActionResolution {
       };
     case "STUDY":
       return {
-        narrative: "You studied intentionally and invested in your future self.",
+        narrative: "Estudiaste con intención e invertiste en tu futuro.",
         effects: [
           { key: "cash", delta: -35 },
           { key: "energy", delta: -8 },
@@ -46,7 +46,7 @@ export function resolveAction(action: DayAction): ActionResolution {
       };
     case "REST":
       return {
-        narrative: "You slowed down, slept better, and reset your baseline.",
+        narrative: "Bajaste el ritmo, dormiste mejor y restableciste tu nivel base.",
         effects: [
           { key: "energy", delta: 24 },
           { key: "stress", delta: -18 },
@@ -55,7 +55,7 @@ export function resolveAction(action: DayAction): ActionResolution {
       };
     case "LEISURE":
       return {
-        narrative: "You disconnected for a while and had a decent time.",
+        narrative: "Te desconectaste un rato y la pasaste bien.",
         effects: [
           { key: "cash", delta: -45 },
           { key: "energy", delta: 8 },
@@ -66,7 +66,7 @@ export function resolveAction(action: DayAction): ActionResolution {
       };
     default:
       return {
-        narrative: "You spent the day in a neutral flow.",
+        narrative: "Pasaste el día en un flujo neutral.",
         effects: []
       };
   }
