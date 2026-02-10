@@ -30,9 +30,9 @@ function endOfDay(state: GameState): { state: GameState; effects: StatEffect[]; 
     pendingEventId: null,
     productivity: computeProductivity(next)
   };
-  const narrative = [`End of day expenses: -${state.burnRate} cash.`];
+  const narrative = [`Gastos de fin de día: -${state.burnRate} dinero.`];
   if (withDayAdvance.day > GAME_CONFIG.maxDay) {
-    narrative.push("Week complete. You reached the end of the MVP run.");
+    narrative.push("Semana completada. Llegaste al final de la partida MVP.");
   }
   return { state: withDayAdvance, effects, narrative };
 }
@@ -85,7 +85,7 @@ export function applyAction(
       eventHistory: history,
       result: {
         dayAction: null,
-        narrative: ["Run already completed. Start a new run to continue."],
+        narrative: ["Partida ya completada. Inicia una nueva partida para continuar."],
         statChanges: [],
         triggeredEvent: null,
         unlocks: [],
@@ -105,7 +105,7 @@ export function applyAction(
     const option = findOption(event, input.eventOptionId);
     state = applyEffects(state, option.effects);
     statChanges.push(...option.effects);
-    narrative.push(`Event resolved: ${event.title} -> ${option.label}`);
+    narrative.push(`Evento resuelto: ${event.title} -> ${option.label}`);
     history[event.id] = context.state.day;
 
     const dayClosure = endOfDay(state);
@@ -139,7 +139,7 @@ export function applyAction(
   const event = selectEvent(state, history, events);
   if (event) {
     state.pendingEventId = event.id;
-    narrative.push(`Event triggered: ${event.title}`);
+    narrative.push(`Evento activado: ${event.title}`);
     return {
       state,
       eventHistory: history,
