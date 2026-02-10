@@ -298,8 +298,17 @@ export function App() {
             ))}
           </ul>
         </div>
-        <div className="action-grid">
-          {ACTIONS.map((action) => (
+        <div className="skills-tree">
+          <h3>Árbol de Habilidades</h3>
+          <div className="skills-grid">
+            <SkillBar label="Backend" value={state.skills.backend} maxValue={20} />
+            <SkillBar label="Frontend" value={state.skills.frontend} maxValue={20} />
+            <SkillBar label="DevOps" value={state.skills.devops} maxValue={20} />
+            <SkillBar label="Habilidades Sociales" value={state.skills.softSkills} maxValue={20} />
+            <SkillBar label="Finanzas Personales" value={state.skills.personalFinance} maxValue={20} />
+          </div>
+        </div>
+        <div className="action-grid">{ACTIONS.map((action) => (
             <button
               key={action.key}
               onClick={() => void handleApplyAction(action.key)}
@@ -321,5 +330,22 @@ function StatCard({ label, value }: { label: string; value: string }) {
       <span>{label}</span>
       <strong>{value}</strong>
     </article>
+  );
+}
+
+function SkillBar({ label, value, maxValue }: { label: string; value: number; maxValue: number }) {
+  const percentage = Math.min((value / maxValue) * 100, 100);
+  const level = Math.floor(value / 5); // Every 5 points = 1 level
+  
+  return (
+    <div className="skill-bar">
+      <div className="skill-header">
+        <span className="skill-label">{label}</span>
+        <span className="skill-value">Nivel {level} ({value}/{maxValue})</span>
+      </div>
+      <div className="skill-progress">
+        <div className="skill-fill" style={{ width: `${percentage}%` }} />
+      </div>
+    </div>
   );
 }
