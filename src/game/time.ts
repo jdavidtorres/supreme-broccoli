@@ -24,9 +24,10 @@ export function advanceHours(clock: GameClock, hours: number): GameClock {
   let newMonth = clock.month;
   let newYear = clock.year;
 
-  // If hour exceeds 22 (end of workday), advance to next day at 9am
+  // If hour exceeds 22 (end of workday), advance to next day at 9am plus remaining hours
   while (newHour >= 22) {
-    newHour = newHour - 22 + 9; // Reset to 9am next day
+    const hoursOverflow = newHour - 22; // Hours past end of day
+    newHour = 9 + hoursOverflow; // Start next day at 9am plus overflow
     newDay++;
     
     const maxDay = daysInMonth(newYear, newMonth);

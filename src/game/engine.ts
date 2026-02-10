@@ -26,7 +26,7 @@ function endOfDay(state: GameState): { state: GameState; effects: StatEffect[]; 
   const withDayAdvance: GameState = {
     ...next,
     day: state.day + 1,
-    // Don't call advanceDay here - clock is already advanced by advanceHours
+    // Clock day/month/year already updated by advanceHours; only increment day counter
     pendingEventId: null,
     productivity: computeProductivity(next)
   };

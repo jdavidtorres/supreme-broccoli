@@ -62,13 +62,13 @@ describe("engine daily flow", () => {
     expect(step2.state.clock.hour).toBe(19);
     expect(step2.state.clock.day).toBe(1);
 
-    // WORK takes 4 hours (19->23, which wraps to next day at 10am)
+    // WORK takes 4 hours (19->23, which wraps to next day at 9am + 1 hour overflow = 10am)
     const step3 = applyAction(
       { state: step2.state, eventHistory: step2.eventHistory },
       { dayAction: "WORK", events: [] }
     );
     expect(step3.state.clock.day).toBe(2); // Day advanced!
-    expect(step3.state.clock.hour).toBe(10); // 19 + 4 = 23, wraps to 10am next day
+    expect(step3.state.clock.hour).toBe(10); // 19 + 4 = 23, wraps to 9 + (23-22) = 10am next day
     expect(step3.state.day).toBe(2); // Day counter advanced
     expect(step3.result.dayAdvanced).toBe(true);
   });
