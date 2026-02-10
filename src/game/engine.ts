@@ -26,7 +26,8 @@ function endOfDay(state: GameState): { state: GameState; effects: StatEffect[]; 
   const withDayAdvance: GameState = {
     ...next,
     day: state.day + 1,
-    // Clock day/month/year already updated by advanceHours; only increment day counter
+    // Note: Clock (day/month/year/hour) was already updated by advanceHours in the caller.
+    // This function only increments the day counter for game logic.
     pendingEventId: null,
     productivity: computeProductivity(next)
   };
@@ -108,20 +109,21 @@ export function applyAction(
     narrative.push(`Evento resuelto: ${event.title} -> ${option.label}`);
     history[event.id] = context.state.day;
 
-    // Clear pending event
-    state.pendingEventId = null;
-
     // Advance time by 1 hour for event resolution
     const newClock = advanceHours(state.clock, 1);
     const dayChanged = newClock.day !== state.clock.day;
     state.clock = newClock;
 
     // Only apply end of day effects if day actually changed
+    // endOfDay will clear pendingEventId and apply stat changes
     if (dayChanged) {
       const dayClosure = endOfDay(state);
       state = dayClosure.state;
       statChanges.push(...dayClosure.effects);
       narrative.push(...dayClosure.narrative);
+    } else {
+      // Clear pending event if day didn't change (endOfDay would do this otherwise)
+      state.pendingEventId = null;
     }
 
     return {
